@@ -25,9 +25,9 @@ Sending message from 2 like this:
 reaches 1, and similarly vice versa.
 
 ## Goal 3
-Have a auth server supporting signup/login functionality. This will be backed by a user database which must be persisted so we don't lose the info when we the server dies. This means having another container running auth server, which writes to a postgres db container.
+Have a auth server supporting signup/login functionality. Keep the user data in memory for now.
 This also means that the chat server should now read the client id from the message itself, and not calculate it.
-This also means the user service instead would do the unique id generation, for now just a simple counter increment, maybe just utilising the DB's capability of auto incrementing counter.
+This also means the user service instead would do the unique id generation, for now just a simple counter increment in memory.
 ### Steps
 1. Write the auth server code with REST endpoints for signup and login. Signup should create the user (to start with, just in memory map). Login whould verify the user is present, given username and pwd, and return the user id back, for client to use in requests to chat server.
 2. Once the above works, launch a postgres db container and persist the data in that. You need to create a table first, with a schema, and then add rows on user signup. Hash the passwords and store.
@@ -45,6 +45,18 @@ This also means the user service instead would do the unique id generation, for 
   -d '{"email":"alice@example.com","password":"secret"}'
 These work, proving auth server works.
 4. Launch container and test the same, with port 3001 instead, as container's 3000 port is exposed as 3001 locally in docker file.
+
+## Goal 4
+Setup a postgres DB container, expose a port, create a DB 'users', create two tables in that, one for user credentials, other for user profile. Create a username and pwd to access the DB, and use that to allow other services to access the DB.
+It would be good if we could have a visual into the DB to quickly verify if the data is being persisted as expected.
+### Steps
+1. Launching the postgres container
+2. Creating tables
+3. See if a GUI is there for DB
+### Test
+1. Some SQL queries on it locally, CRUD
+2. Autoincrementing user id works?
+3. Killing the container and restarting persists the data?
 
 (Misc)
 1. Given the current code of server, multiple client connections will be processed in a single thread one after another. We don't have parallel processing. Seems like it would be good to have a thread pool and offload the work to that? Only if needed? Does nodejs even allow spawning threads?

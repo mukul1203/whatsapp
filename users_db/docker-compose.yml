@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: users_db
+    # Restart automatically only if the process exits with a non-zero code (crash).
+    restart: on-failure
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: p@ssw0rd
+      POSTGRES_DB: users
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./data:/var/lib/postgresql/data
