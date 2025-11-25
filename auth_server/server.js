@@ -113,6 +113,11 @@ const pgClient = new pgclient({
 });
 
 await pgClient.connect();
+pgClient.on('error', err => {
+  console.error('pg client error', err);
+  // optionally attempt reconnect logic here
+  pgClient.connect();
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Auth server listening on http://localhost:${PORT}`));

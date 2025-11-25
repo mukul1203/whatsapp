@@ -2,11 +2,6 @@ import { WebSocketServer } from "ws";
 
 let clientToSocketMap = {};
 
-let counter = 0;
-const generateClientId = () => {
-    return ++counter;
-}
-
 // message schema:
 // {
 //     from: 1, // client id
@@ -16,12 +11,14 @@ const generateClientId = () => {
 
 const wss = new WebSocketServer({ port: 8080 });
 
-wss.on("connection", (ws) => {
+wss.on("connection", (ws, req) => {
   console.log("Client connected");
 
   // track the socket for this client id
-  const id = generateClientId();
-  clientToSocketMap[id] = ws;
+    const params = new URLSearchParams(req.url.replace('/', ''));
+    const userId = params.get("user_id");
+    console.log("User connected:", userId);
+  clientToSocketMap[userId] = ws;
 
   ws.on("message", (msg) => {
     let msg_json = JSON.parse(msg);
@@ -37,7 +34,7 @@ wss.on("connection", (ws) => {
     }
   });
 
-  ws.send(`Connected with id ${id}`);
+  ws.send(`Connected with id ${userId}`);
 });
 
 console.log("WebSocket server running on ws://0.0.0.0:8080");

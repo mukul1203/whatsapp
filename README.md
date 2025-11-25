@@ -74,6 +74,11 @@ Connect auth service to this db so that a user signup persists in db, returns th
 3. Failing signup for existing email id verified.
 4. Failing login for invalid email or wrong password verified.
 
+## Goal 6
+Chat between two users with valid user ids. This only needs change in chat server, where on connecting via websocket, the client will supply the user_id to the chat server, telling who is connecting.
+Chat server doesn't bother checking if it is a valid user for now. It just tracks the sockets for each user_id in inmemory map as earlier.
+### Outputs
+Chatting between clients working as earlier.
 
 (Misc)
 1. Given the current code of server, multiple client connections will be processed in a single thread one after another. We don't have parallel processing. Seems like it would be good to have a thread pool and offload the work to that? Only if needed? Does nodejs even allow spawning threads?
