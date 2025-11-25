@@ -57,6 +57,23 @@ It would be good if we could have a visual into the DB to quickly verify if the 
 1. Some SQL queries on it locally, CRUD
 2. Autoincrementing user id works?
 3. Killing the container and restarting persists the data?
+### Outputs
+The db was setup successfully with two tables viz. auth_users and profiles. CRUD was tested on both. Container stop and start retains data.
+
+## Goal 5
+Connect auth service to this db so that a user signup persists in db, returns the user id. And a user login checks against db and updates the last login time in db.
+### Steps
+1. Update auth server code to know the postgres server and db details to allow connection.
+2. Update the auth server code to make write and read calls.
+### Test
+1. Sign up creates entry in both the tables (profiles table can be create with some defaults or empty)
+2. Login verifies the user and updates login time stamp in db.
+### Outputs
+1. Was able to sign up new users, which adds to both the tables.
+2. Was able to login with existing user name and pwd.
+3. Failing signup for existing email id verified.
+4. Failing login for invalid email or wrong password verified.
+
 
 (Misc)
 1. Given the current code of server, multiple client connections will be processed in a single thread one after another. We don't have parallel processing. Seems like it would be good to have a thread pool and offload the work to that? Only if needed? Does nodejs even allow spawning threads?
